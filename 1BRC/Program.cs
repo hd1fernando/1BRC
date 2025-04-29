@@ -17,9 +17,8 @@ using (var stream = File.OpenRead("D:\\1brc\\1brc\\data\\measurements.txt"))
         int intLine = 1;
         while ((line = streamReader.ReadLine()) != null)
         {
-            var stationValues = line.Split(';');
-            var stationName = stationValues[0];
-            var temperature = float.Parse(stationValues[1]);
+            var stationName = line.AsSpan(0,line.IndexOf(';')).ToString();
+            var temperature = float.Parse(line.AsSpan(line.IndexOf(';') + 1));
             if (values.ContainsKey(stationName))
             {
                 Station station = values[stationName];
@@ -48,3 +47,5 @@ foreach (var result in sortedResult)
 
 totalTime.Stop();
 Console.WriteLine(totalTime.ElapsedMilliseconds + " ms");
+Console.ReadKey();
+// 1M Rows - 43903 ms, 48649 ms, 43335 ms
