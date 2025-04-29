@@ -8,16 +8,29 @@ var totalTime = new Stopwatch();
 totalTime.Start();
 
 // processing text
+int bufferSize = 1024;
+//var rawBuffer = new byte[bufferSize];
+//using (var fs = File.OpenRead("D:\\1brc\\1brc\\data\\measurements.txt"))
+//{
+//    var bytesBuffered = 0;
+//    var bytesConsumed = 0;
+//    while (true)
+//    {
+//        var bytesRead = fs.Read(rawBuffer,bytesBuffered,rawBuffer.Length - bytesBuffered);
+//        if (bytesRead == 0)
+//            break;
+//    }
+//}
+
 using (var stream = File.OpenRead("D:\\1brc\\1brc\\data\\measurements.txt"))
 {
-    int bufferSize = 128;
     using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, bufferSize))
     {
         string line;
         int intLine = 1;
         while ((line = streamReader.ReadLine()) != null)
         {
-            var stationName = line.AsSpan(0,line.IndexOf(';')).ToString();
+            var stationName = line.AsSpan(0, line.IndexOf(';')).ToString();
             var temperature = float.Parse(line.AsSpan(line.IndexOf(';') + 1));
             if (values.ContainsKey(stationName))
             {
@@ -48,4 +61,4 @@ foreach (var result in sortedResult)
 totalTime.Stop();
 Console.WriteLine(totalTime.ElapsedMilliseconds + " ms");
 Console.ReadKey();
-// 1M Rows - 43903 ms, 48649 ms, 43335 ms
+// 1M Rows - 43903 ms, 48649 ms, 43335 ms, 42859 ms
