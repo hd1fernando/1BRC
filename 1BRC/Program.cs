@@ -1,64 +1,38 @@
-﻿
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
 
 var values = new Dictionary<string, Station>();
 
 var totalTime = new Stopwatch();
+var gen2 = GC.CollectionCount(2);
+var gen1 = GC.CollectionCount(1);
+var gen0 = GC.CollectionCount(0);
 totalTime.Start();
 
 // processing text
-int bufferSize = 1024;
-//var rawBuffer = new byte[bufferSize];
-//using (var fs = File.OpenRead("D:\\1brc\\1brc\\data\\measurements.txt"))
-//{
-//    var bytesBuffered = 0;
-//    var bytesConsumed = 0;
-//    while (true)
-//    {
-//        var bytesRead = fs.Read(rawBuffer,bytesBuffered,rawBuffer.Length - bytesBuffered);
-//        if (bytesRead == 0)
-//            break;
-//    }
-//}
+int bufferSize = 1024 * 1024;
 
-using (var stream = File.OpenRead("D:\\1brc\\1brc\\data\\measurements.txt"))
-{
-    using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, bufferSize))
-    {
-        string line;
-        int intLine = 1;
-        while ((line = streamReader.ReadLine()) != null)
-        {
-            var stationName = line.AsSpan(0, line.IndexOf(';')).ToString();
-            var temperature = float.Parse(line.AsSpan(line.IndexOf(';') + 1));
-            if (values.ContainsKey(stationName))
-            {
-                Station station = values[stationName];
-                station.Values.Add(temperature);
-            }
-            else
-            {
-                Station station = new Station();
-                station.Name = stationName;
-                station.Values.Add(temperature);
-                values[stationName] = station;
-            }
+var filePath = "D:\\1brc\\1brc\\data\\measurements.txt";
 
-            Console.WriteLine(intLine + " " + line);
-            intLine++;
-        }
-    }
-}
+MinGCAllocApproach.Run(values, bufferSize, filePath);
+
+//SimpleApproachWithSpan.Run(values, bufferSize, filePath);
 
 // calculate
+totalTime.Stop();
+var gen2Count = GC.CollectionCount(2) - gen2;
+var gen1Count = GC.CollectionCount(1) - gen1;
+var gen0Count = GC.CollectionCount(0) - gen0;
+
+
 var sortedResult = values.OrderBy(x => x.Key).ToList();
 foreach (var result in sortedResult)
 {
     Console.WriteLine(result.Value.ToString());
 }
 
-totalTime.Stop();
+
 Console.WriteLine(totalTime.ElapsedMilliseconds + " ms");
+Console.WriteLine("Gen 2: " + gen2Count);
+Console.WriteLine("Gen 1: " + gen1Count);
+Console.WriteLine("Gen 0: " + gen0Count);
 Console.ReadKey();
-// 1M Rows - 43903 ms, 48649 ms, 43335 ms, 42859 ms

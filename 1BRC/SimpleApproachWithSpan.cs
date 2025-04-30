@@ -1,0 +1,46 @@
+﻿using System.Text;
+
+public static class SimpleApproachWithSpan
+{
+    public static void Run(Dictionary<string, Station> values, int bufferSize, string filePath)
+    {
+        using (var stream = File.OpenRead(filePath))
+        {
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, bufferSize))
+            {
+                string line;
+                int intLine = 1;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    var stationName = line.AsSpan(0, line.IndexOf(';')).ToString();
+                    var temperature = float.Parse(line.AsSpan(line.IndexOf(';') + 1));
+                    if (values.ContainsKey(stationName))
+                    {
+                        Station station = values[stationName];
+                        station.Values.Add(temperature);
+                    }
+                    else
+                    {
+                        Station station = new Station();
+                        station.Name = stationName;
+                        station.Values.Add(temperature);
+                        values[stationName] = station;
+                    }
+
+                    Console.WriteLine(intLine + " " + line);
+                    intLine++;
+                }
+            }
+        }
+    }
+}
+/** Results
+1M lines
+
+47499 ms
+Gen 2: 4
+Gen 1: 27
+Gen 0: 65
+---
+
+ */
