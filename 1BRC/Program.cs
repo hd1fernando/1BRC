@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 var values = new Dictionary<string, Station>();
 
@@ -31,10 +32,12 @@ var gen0Calculate = GC.CollectionCount(0);
 calculateTime.Start();
 
 var sortedResult = values.OrderBy(x => x.Key).ToList();
+var sb = new StringBuilder();
 foreach (var result in sortedResult)
 {
-    Console.WriteLine(result.Value.ToString());
+    sb.AppendLine(result.Value.ToString());
 }
+Console.WriteLine(sb.ToString());
 
 calculateTime.Stop();
 var gen2CountCalculate = GC.CollectionCount(2) - gen2;
