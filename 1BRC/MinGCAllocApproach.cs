@@ -81,6 +81,17 @@ Gen 2: 0
 Gen 1: 1
 Gen 0: 10
 Calculate and print time: 978 ms
+-------------------------------
+
+Processing file time: 1494 ms
+Gen 2: 0
+Gen 1: 1
+Gen 0: 10
+
+Calculate and print time: 930 ms
+Gen 2: 0
+Gen 1: 1
+Gen 0: 10
 
 ================================
 
