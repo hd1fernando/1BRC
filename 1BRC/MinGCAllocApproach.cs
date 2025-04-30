@@ -4,6 +4,7 @@ public static class MinGCAllocApproach
 {
     public static void Run(Dictionary<string, Station> values, int bufferSize, string filePath)
     {
+        Console.WriteLine("Running...");
         var rawBuffer = new byte[bufferSize];
         using (var fs = File.OpenRead(filePath))
         {
@@ -44,7 +45,6 @@ public static class MinGCAllocApproach
                             values[stationName] = station;
                         }
 
-                        Console.WriteLine(Encoding.UTF8.GetString(line));
                     }
                 } while (linePosition >= 0);
 
@@ -64,11 +64,16 @@ Gen 2: 4
 Gen 1: 14
 Gen 0: 33
 ------------
-
 42742 ms
 Gen 2: 4
 Gen 1: 15
 Gen 0: 33
+
+------------
+901 ms
+Gen 2: 1
+Gen 1: 3
+Gen 0: 9
 
 ================================
  */

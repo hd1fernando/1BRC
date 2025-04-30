@@ -5,6 +5,7 @@ public static class SimpleApproachWithSpan
 {
     public static async Task Run(Dictionary<string, Station> values, int bufferSize, string filePath)
     {
+        Console.WriteLine("Running...");
         using (var stream = File.OpenRead(filePath))
         {
             using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, bufferSize))
@@ -26,8 +27,6 @@ public static class SimpleApproachWithSpan
                         station.Values.Add(temperature);
                         values[stationName] = station;
                     }
-
-                    Console.WriteLine(line);
                 }
             }
         }
@@ -46,6 +45,17 @@ Gen 2: 5
 Gen 1: 15
 Gen 0: 33
 
+---
+42275 ms
+Gen 2: 5
+Gen 1: 18
+Gen 0: 51
+----
+
+976 ms
+Gen 2: 5
+Gen 1: 32
+Gen 0: 49
 
 =====================
  */
