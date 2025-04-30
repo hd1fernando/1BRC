@@ -74,6 +74,14 @@ Gen 0: 33
 Gen 2: 1
 Gen 1: 3
 Gen 0: 9
+-----------
+
+Processing file time: 2184 ms
+Gen 2: 0
+Gen 1: 1
+Gen 0: 10
+Calculate and print time: 978 ms
 
 ================================
+
  */

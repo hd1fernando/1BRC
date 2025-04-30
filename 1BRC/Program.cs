@@ -25,14 +25,21 @@ var gen0Count = GC.CollectionCount(0) - gen0;
 
 
 var calculateTime = new Stopwatch();
+var gen2Calculate = GC.CollectionCount(2);
+var gen1Calculate = GC.CollectionCount(1);
+var gen0Calculate = GC.CollectionCount(0);
 calculateTime.Start();
+
 var sortedResult = values.OrderBy(x => x.Key).ToList();
 foreach (var result in sortedResult)
 {
     Console.WriteLine(result.Value.ToString());
 }
-calculateTime.Stop();
 
+calculateTime.Stop();
+var gen2CountCalculate = GC.CollectionCount(2) - gen2;
+var gen1CountCalculate = GC.CollectionCount(1) - gen1;
+var gen0CountCalculate = GC.CollectionCount(0) - gen0;
 
 Console.WriteLine("Processing file time: " + totalTime.ElapsedMilliseconds + " ms");
 Console.WriteLine("Gen 2: " + gen2Count);
@@ -41,5 +48,8 @@ Console.WriteLine("Gen 0: " + gen0Count);
 Console.WriteLine();
 
 Console.WriteLine("Calculate and print time: " + calculateTime.ElapsedMilliseconds + " ms");
+Console.WriteLine("Gen 2: " + gen2CountCalculate);
+Console.WriteLine("Gen 1: " + gen1CountCalculate);
+Console.WriteLine("Gen 0: " + gen0CountCalculate);
 
 Console.ReadKey();

@@ -4,8 +4,8 @@
     public decimal Min { get; private set; } = decimal.MaxValue;
     public decimal Max { get; set; } = decimal.MinValue;
     public decimal Mean { get; set; } = decimal.MinValue;
-    public int NumberOfValues { get; set; } = 0;
-    public decimal Sum { get; set; } = 0;
+    private int NumberOfValues { get; set; } = 0;
+    private decimal Sum { get; set; } = 0;
 
     public void AddValue(decimal value)
     {
