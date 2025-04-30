@@ -40,9 +40,9 @@ foreach (var result in sortedResult)
 Console.WriteLine(sb.ToString());
 
 calculateTime.Stop();
-var gen2CountCalculate = GC.CollectionCount(2) - gen2;
-var gen1CountCalculate = GC.CollectionCount(1) - gen1;
-var gen0CountCalculate = GC.CollectionCount(0) - gen0;
+var gen2CountCalculate = GC.CollectionCount(2) - gen2Calculate;
+var gen1CountCalculate = GC.CollectionCount(1) - gen1Calculate;
+var gen0CountCalculate = GC.CollectionCount(0) - gen0Calculate;
 
 Console.WriteLine("Processing file time: " + totalTime.ElapsedMilliseconds + " ms");
 Console.WriteLine("Gen 2: " + gen2Count);
