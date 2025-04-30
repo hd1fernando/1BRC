@@ -9,7 +9,6 @@ public static class SimpleApproachWithSpan
             using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, bufferSize))
             {
                 string line;
-                int intLine = 1;
                 while ((line = streamReader.ReadLine()) != null)
                 {
                     var stationName = line.AsSpan(0, line.IndexOf(';')).ToString();
@@ -27,8 +26,7 @@ public static class SimpleApproachWithSpan
                         values[stationName] = station;
                     }
 
-                    Console.WriteLine(intLine + " " + line);
-                    intLine++;
+                    Console.WriteLine(line);
                 }
             }
         }

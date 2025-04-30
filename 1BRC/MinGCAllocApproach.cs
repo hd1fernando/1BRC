@@ -57,12 +57,18 @@ public static class MinGCAllocApproach
 }
 
 /* Results:
-1M lines:
+============ 1M lines ==========
 
 42728 ms
 Gen 2: 4
 Gen 1: 14
 Gen 0: 33
 ------------
- 
+
+42742 ms
+Gen 2: 4
+Gen 1: 15
+Gen 0: 33
+
+================================
  */

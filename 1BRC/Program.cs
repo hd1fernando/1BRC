@@ -13,9 +13,9 @@ int bufferSize = 1024 * 1024;
 
 var filePath = "D:\\1brc\\1brc\\data\\measurements.txt";
 
-MinGCAllocApproach.Run(values, bufferSize, filePath);
+//MinGCAllocApproach.Run(values, bufferSize, filePath);
 
-//SimpleApproachWithSpan.Run(values, bufferSize, filePath);
+SimpleApproachWithSpan.Run(values, bufferSize, filePath);
 
 // calculate
 totalTime.Stop();
