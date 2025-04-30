@@ -1,15 +1,16 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 
 public static class SimpleApproachWithSpan
 {
-    public static void Run(Dictionary<string, Station> values, int bufferSize, string filePath)
+    public static async Task Run(Dictionary<string, Station> values, int bufferSize, string filePath)
     {
         using (var stream = File.OpenRead(filePath))
         {
             using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, bufferSize))
             {
                 string line;
-                while ((line = streamReader.ReadLine()) != null)
+                while ((line = await streamReader.ReadLineAsync()) != null)
                 {
                     var stationName = line.AsSpan(0, line.IndexOf(';')).ToString();
                     var temperature = float.Parse(line.AsSpan(line.IndexOf(';') + 1));
@@ -33,12 +34,18 @@ public static class SimpleApproachWithSpan
     }
 }
 /** Results
-1M lines
-
+============ 1M lines ==========
 47499 ms
 Gen 2: 4
 Gen 1: 27
 Gen 0: 65
----
 
+---
+43471 ms
+Gen 2: 5
+Gen 1: 15
+Gen 0: 33
+
+
+=====================
  */
