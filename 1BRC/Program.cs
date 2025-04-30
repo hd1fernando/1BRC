@@ -24,15 +24,22 @@ var gen1Count = GC.CollectionCount(1) - gen1;
 var gen0Count = GC.CollectionCount(0) - gen0;
 
 
+var calculateTime = new Stopwatch();
+calculateTime.Start();
 var sortedResult = values.OrderBy(x => x.Key).ToList();
 foreach (var result in sortedResult)
 {
     Console.WriteLine(result.Value.ToString());
 }
+calculateTime.Stop();
 
 
-Console.WriteLine(totalTime.ElapsedMilliseconds + " ms");
+Console.WriteLine("Processing file time: " + totalTime.ElapsedMilliseconds + " ms");
 Console.WriteLine("Gen 2: " + gen2Count);
 Console.WriteLine("Gen 1: " + gen1Count);
 Console.WriteLine("Gen 0: " + gen0Count);
+Console.WriteLine();
+
+Console.WriteLine("Calculate and print time: " + calculateTime.ElapsedMilliseconds + " ms");
+
 Console.ReadKey();
