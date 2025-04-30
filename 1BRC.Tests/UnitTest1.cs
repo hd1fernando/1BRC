@@ -5,22 +5,14 @@
         [Fact]
         public void Test1()
         {
-            var station = new Station
-            {
-                Values = new List<float>
-                {
-                    10.0f, 20.0f, 30.0f
-                },
-                Name = "MyStation"
-            };
+            var station = new Station();
+            station.AddValue(10.0m);
+            station.AddValue(20.0m);
+            station.AddValue(30.0m);
 
-            var min = station.Min();
-            var max = station.Max();
-            var mean = station.Mean();
-
-            Assert.Equal(10.0f,min);
-            Assert.Equal(30.0f,max);
-            Assert.Equal(20.0f, mean);
+            Assert.Equal(10.0m,station.Min);
+            Assert.Equal(30.0m,station.Max);
+            Assert.Equal(20.0m, station.Mean);
         }
     }
 }

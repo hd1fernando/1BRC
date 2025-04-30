@@ -30,18 +30,18 @@ public static class MinGCAllocApproach
                         bytesConsumed += lineLenght + 1;
 
                         string? stationName = Encoding.UTF8.GetString(line.Slice(0, line.IndexOf((byte)';')));
-                        var temperature = float.Parse(line.Slice(line.IndexOf((byte)';') + 1));
+                        var temperature = decimal.Parse(line.Slice(line.IndexOf((byte)';') + 1));
 
                         if (values.ContainsKey(stationName))
                         {
                             Station station = values[stationName];
-                            station.Values.Add(temperature);
+                            station.AddValue(temperature);
                         }
                         else
                         {
                             Station station = new Station();
                             station.Name = stationName;
-                            station.Values.Add(temperature);
+                            station.AddValue(temperature);
                             values[stationName] = station;
                         }
 

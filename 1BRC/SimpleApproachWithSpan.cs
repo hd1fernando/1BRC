@@ -14,17 +14,17 @@ public static class SimpleApproachWithSpan
                 while ((line = await streamReader.ReadLineAsync()) != null)
                 {
                     var stationName = line.AsSpan(0, line.IndexOf(';')).ToString();
-                    var temperature = float.Parse(line.AsSpan(line.IndexOf(';') + 1));
+                    var temperature = decimal.Parse(line.AsSpan(line.IndexOf(';') + 1));
                     if (values.ContainsKey(stationName))
                     {
                         Station station = values[stationName];
-                        station.Values.Add(temperature);
+                        station.AddValue(temperature);
                     }
                     else
                     {
                         Station station = new Station();
                         station.Name = stationName;
-                        station.Values.Add(temperature);
+                        station.AddValue(temperature);
                         values[stationName] = station;
                     }
                 }
