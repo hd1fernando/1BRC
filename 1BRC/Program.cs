@@ -60,4 +60,8 @@ Console.WriteLine("Gen 2: " + gen2CountCalculate);
 Console.WriteLine("Gen 1: " + gen1CountCalculate);
 Console.WriteLine("Gen 0: " + gen0CountCalculate);
 
+
+var audit = values.Sum(_ => _.Value[2]);
+Console.WriteLine($"Total is row: {audit}");
+
 Console.ReadKey();
