@@ -1,8 +1,9 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 public static class MinGCAllocApproach
 {
-    public static void Run(Dictionary<string, Station> values, int bufferSize, string filePath)
+    public static void Run(Dictionary<string, decimal[]> values, int bufferSize, string filePath)
     {
         Console.WriteLine("Running...");
         var rawBuffer = new byte[bufferSize];
@@ -19,7 +20,6 @@ public static class MinGCAllocApproach
 
                 bytesBuffered += bytesRead;
                 int linePosition;
-
                 do
                 {
                     linePosition = Array.IndexOf(rawBuffer, (byte)'\n', bytesConsumed, (bytesBuffered - bytesConsumed));
@@ -32,22 +32,37 @@ public static class MinGCAllocApproach
                         string? stationName = Encoding.UTF8.GetString(line.Slice(0, line.IndexOf((byte)';')));
                         var temperature = decimal.Parse(line.Slice(line.IndexOf((byte)';') + 1));
 
-                        if (values.ContainsKey(stationName))
+                        if (!values.ContainsKey(stationName))
                         {
-                            Station station = values[stationName];
-                            station.AddValue(temperature);
+                            var station = new decimal[4];
+                            // min
+                            station[0] = temperature;
+                            // max
+                            station[1] = temperature;
+                            // numOfValues
+                            station[2] = 1;
+                            // sum
+                            station[3] = temperature;
+
+                            values.Add(stationName, station);
                         }
                         else
                         {
-                            Station station = new Station();
-                            station.Name = stationName;
-                            station.AddValue(temperature);
+                            var station = values[stationName];
+                            // min
+                            station[0] = temperature < station[0] ? temperature : station[0];
+                            // max
+                            station[1] = temperature > station[1] ? temperature : station[1];
+                            // numOfValues
+                            station[2] += 1;
+                            // sum
+                            station[3] += temperature;
+
                             values[stationName] = station;
                         }
 
                     }
                 } while (linePosition >= 0);
-
                 Array.Copy(rawBuffer, bytesConsumed, rawBuffer, 0, (bytesBuffered - bytesConsumed));
                 bytesBuffered -= bytesConsumed;
                 bytesConsumed = 0;
@@ -104,4 +119,15 @@ Calculate and print time: 952 ms
 Gen 2: 4
 Gen 1: 36
 Gen 0: 20688
+--------------------------------
+Processing file time: 403696 ms
+Gen 2: 5
+Gen 1: 42
+Gen 0: 20685
+
+Calculate and print time: 1857 ms
+Gen 2: 0
+Gen 1: 0
+Gen 0: 1
+
  */

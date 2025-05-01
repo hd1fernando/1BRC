@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-var values = new Dictionary<string, Station>();
+var values = new Dictionary<string, decimal[]>();
 
 var totalTime = new Stopwatch();
 var gen2 = GC.CollectionCount(2);
@@ -12,7 +12,7 @@ totalTime.Start();
 // processing text
 int bufferSize = 1024 * 1024;
 
-var filePath = "D:\\1brc\\1brc\\data\\measurements.txt";
+var filePath = "D:\\1brc\\1brc\\data\\measurements_max.txt";
 
 MinGCAllocApproach.Run(values, bufferSize, filePath);
 
@@ -35,7 +35,10 @@ var sortedResult = values.OrderBy(x => x.Key).ToList();
 var sb = new StringBuilder();
 foreach (var result in sortedResult)
 {
-    sb.AppendLine(result.Value.ToString());
+    var mean = result.Value[3] / result.Value[2];
+    var min = result.Value[0];
+    var max = result.Value[1];
+    sb.AppendLine($"{result.Key}={min}/{mean}/{max}");
 }
 Console.WriteLine(sb.ToString());
 
