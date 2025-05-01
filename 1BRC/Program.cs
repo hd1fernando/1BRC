@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text;
 
-var values = new Dictionary<string, decimal[]>();
+int concurrencyLevel = Environment.ProcessorCount - 1;
+var values = new ConcurrentDictionary<string, decimal[]>(concurrencyLevel, 1_000);
 
 var totalTime = new Stopwatch();
 var gen2 = GC.CollectionCount(2);
@@ -12,7 +14,7 @@ totalTime.Start();
 // processing text
 int bufferSize = 1024 * 1024;
 
-var filePath = "D:\\1brc\\1brc\\data\\measurements_max.txt";
+var filePath = "D:\\1brc\\1brc\\data\\measurements.txt";
 
 MinGCAllocApproach.Run(values, bufferSize, filePath);
 

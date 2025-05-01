@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text;
 
 public static class MinGCAllocApproach
 {
-    public static void Run(Dictionary<string, decimal[]> values, int bufferSize, string filePath)
+    public static void Run(ConcurrentDictionary<string, decimal[]> values, int bufferSize, string filePath)
     {
         Console.WriteLine("Running...");
         var rawBuffer = new byte[bufferSize];
@@ -44,7 +45,9 @@ public static class MinGCAllocApproach
                             // sum
                             station[3] = temperature;
 
-                            values.Add(stationName, station);
+                            var result = values.TryAdd(stationName, station);
+                            if (result == false)
+                                throw new InvalidOperationException();
                         }
                         else
                         {
