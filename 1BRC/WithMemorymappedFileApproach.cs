@@ -86,9 +86,9 @@ public static class WithMemorymappedFileApproach
         {
             var station = values[stationName];
             // min
-            station[0] = temperature < station[0] ? temperature : station[0];
+            station[0] = Math.Min(temperature, station[0]);
             // max
-            station[1] = temperature > station[1] ? temperature : station[1];
+            station[1] = Math.Max(temperature, station[1]);
             // numOfValues
             station[2] += 1;
             // sum
