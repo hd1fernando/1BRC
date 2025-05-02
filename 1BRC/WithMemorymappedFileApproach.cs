@@ -15,9 +15,12 @@ public static class WithMemorymappedFileApproach
         var buffer = new byte[buffersize];
         long position = 0;
 
-        var stationNameSb = new StringBuilder();
-        var temperatureSb = new StringBuilder();
-        bool isComputinStationName = true;
+        (int start, int end) stationNamePostions = (0, 0);
+        (int start, int end) temperaturePostions = (0, 0);
+
+        byte[] lineByte = new byte[100];
+        int lineBytePointer = 0;
+
         while (position < length)
         {
             var bytesToRead = Math.Min(buffer.Length, length - position);
@@ -25,40 +28,22 @@ public static class WithMemorymappedFileApproach
 
             for (int i = 0; i < bytesToRead; i++)
             {
-                if (isComputinStationName)
+                var eol = (char)buffer[i];
+                if (eol == '\n')
                 {
-                    var c = (char)buffer[i];
-                    if (c == ';')
-                    {
-                        isComputinStationName = false;
-                    }
-                    else
-                    {
-                        stationNameSb.Append(c);
-                    }
+                    var line = new Span<byte>(lineByte, 0, lineBytePointer + 1);
+                    var indexOfComma = line.IndexOf((byte)';');
+                    var stationName = Encoding.UTF8.GetString(line.Slice(0, indexOfComma));
+                    var lengthOfTemperature = lineBytePointer - indexOfComma - 1;
+                    var temperature = decimal.Parse(line.Slice(indexOfComma + 1, lengthOfTemperature));
+                    ComputeTemperature(values, stationName, temperature);
+                    lineBytePointer = 0;
                 }
                 else
                 {
-                    var c = (char)buffer[i];
-                    if (c == '\n')
-                    {
-                        isComputinStationName = true;
-                        var stationName = stationNameSb.ToString();
-                        var temperature = decimal.Parse(temperatureSb.ToString());
-
-                        ComputeTemperature(values, stationName, temperature);
-
-                        stationNameSb.Clear();
-                        temperatureSb.Clear();
-
-                    }
-                    else
-                    {
-                        temperatureSb.Append(c);
-                    }
+                    lineByte[lineBytePointer++] = buffer[i];
                 }
             }
-
             position += bytesToRead;
         }
     }
@@ -111,7 +96,17 @@ Gen 2: 0
 Gen 1: 0
 Gen 0: 1
 Total is row: 1000000
+----------------------------
+Processing file time: 896 ms
+Gen 2: 0
+Gen 1: 1
+Gen 0: 18
 
+Calculate and print time: 1074 ms
+Gen 2: 0
+Gen 1: 0
+Gen 0: 0
+Total is row: 1000000
 
 ===============1BR===============
 
